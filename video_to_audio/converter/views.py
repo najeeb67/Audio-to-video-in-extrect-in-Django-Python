@@ -3,6 +3,7 @@ from rest_framework import status, viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from .models import Video
+from django.conf import settings
 from .serializers import VideoSerializer
 from moviepy.editor import VideoFileClip
 import os
@@ -31,7 +32,8 @@ class VideoViewSet(viewsets.ModelViewSet):
             audio_clip = video_clip.audio
             audio_clip.write_audiofile(audio_path)
             
-        video.audio_file.name = audio_path.split('/')[-1]
+        # video.audio_file.name = audio_path.split('/')[-1]
+        video.audio_file.name = os.path.relpath(audio_path, settings.MEDIA_ROOT)
         video.save()
 
 
